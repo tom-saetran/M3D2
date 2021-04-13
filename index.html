@@ -11,12 +11,11 @@
         <title>-</title>
     </head>
     <body>
-        <div id="myParent" class="container">
-            <!-- seed here --->
+        <div class="container-fluid">
+            <div id="parent" class="row"></div>
         </div>
-
         <script>
-            const getData = (input) => {
+            const getData = input => {
                 const apiUrl = "https://striveschool-api.herokuapp.com/api/deezer/search?q="
                 fetch(apiUrl + input, {
                     method: "GET",
@@ -25,54 +24,23 @@
                         "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
                     }
                 })
-                    .then((response) => response.json())
-                    .then((objects) => {
-                        const parent = document.querySelector("#myParent")
-                        parent.innerText = ""
-
+                    .then(response => response.json())
+                    .then(objects => {
+                        const parent = document.querySelector("#parent")
                         for (const item of objects.data) {
                             const container = document.createElement("div")
+                            container.classList.add("col")
+                            container.classList.add("no-gutters")
                             const image = document.createElement("img")
-                            container.classList.add("col-2")
-                            container.classList.add("col-md-3")
                             image.src = item.album.cover
-                            image.classList.add("img-fluid")
+                            image.width = 420
+                            image.height = 420
+                            image.classList.add("img")
                             container.appendChild(image)
                             parent.appendChild(container)
                         }
                     })
-                    .catch((err) => console.error("ERROR " + err))
-            }
-
-            function loadResults(searchTerm) {
-                const parent = document.getElementById("myParent")
-                parent.classList.remove("d-none")
-                fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + searchTerm)
-                    .then((response) => {
-                        response.json()
-                        console.log(response)
-                    })
-                    .then((books) => {
-                        const row = document.querySelector(".row")
-                        row.innerText = ""
-
-                        for (const book of books) {
-                            const bookDiv = document.createElement("div")
-                            const img = document.createElement("img")
-                            bookDiv.classList.add("col-12")
-                            bookDiv.classList.add("col-md-3")
-                            img.src = book.img
-                            img.classList.add("img-fluid")
-                            bookDiv.appendChild(img)
-                            row.appendChild(bookDiv)
-                        }
-                        parent.classList.add("d-none")
-                    })
-                    .catch((err) => {
-                        const row = document.querySelector(".row")
-                        row.innerText = "Cannot load from API"
-                        parent.classList.add("d-none")
-                    })
+                    .catch(err => console.error("ERROR " + err))
             }
         </script>
 
