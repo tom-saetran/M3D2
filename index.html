@@ -11,14 +11,14 @@
         <title>-</title>
     </head>
     <body>
-        <div class="container">
-            <div id="myParent" class="col">
-                <!-- seed here --->
-            </div>
+        <div id="myParent" class="container">
+            <!-- seed here --->
         </div>
+
         <script>
             const getData = (input) => {
-                fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + input, {
+                const apiUrl = "https://striveschool-api.herokuapp.com/api/deezer/search?q="
+                fetch(apiUrl + input, {
                     method: "GET",
                     headers: {
                         "x-rapidapi-key": "1ac915ebd1msh51e35a30adc81e4p187290jsn7a678b36b4b6",
@@ -26,7 +26,21 @@
                     }
                 })
                     .then((response) => response.json())
-                    .then((data) => console.log(data))
+                    .then((objects) => {
+                        const parent = document.querySelector("#myParent")
+                        parent.innerText = ""
+
+                        for (const item of objects.data) {
+                            const container = document.createElement("div")
+                            const image = document.createElement("img")
+                            container.classList.add("col-2")
+                            container.classList.add("col-md-3")
+                            image.src = item.album.cover
+                            image.classList.add("img-fluid")
+                            container.appendChild(image)
+                            parent.appendChild(container)
+                        }
+                    })
                     .catch((err) => console.error("ERROR " + err))
             }
 
